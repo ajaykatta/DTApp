@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/_services/Auth.service';
 import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { error } from 'protractor';
+import { pipeFromArray } from 'rxjs/internal/util/pipe';
 
 @Component({
   selector: 'app-photo-editor',
@@ -66,6 +67,15 @@ export class PhotoEditorComponent implements OnInit {
         };
 
         this.photos.push(photo);
+
+        if (photo.isMain) {
+          this.authService.changeMemberPhoto(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem(
+            'user',
+            JSON.stringify(this.authService.currentUser)
+          );
+        }
       }
     };
   }
