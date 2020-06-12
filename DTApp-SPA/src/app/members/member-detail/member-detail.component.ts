@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { User } from 'src/app/_models/user';
@@ -9,14 +9,15 @@ import {
   NgxGalleryImage,
   NgxGalleryAnimation,
 } from '@kolkov/ngx-gallery';
-import { of } from 'rxjs';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 
 @Component({
   selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
   styleUrls: ['./member-detail.component.css'],
 })
-export class MemberDetailComponent implements OnInit {
+export class MemberDetailComponent implements OnInit, AfterViewInit {
+  @ViewChild('memberTabs') memberTabs: TabsetComponent;
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
@@ -26,6 +27,16 @@ export class MemberDetailComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute
   ) {}
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.route.queryParams.subscribe((params) => {
+        const selectedTab = params['tab'];
+        // this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
+        this.memberTabs.tabs[3].active = true;
+      });
+    });
+  }
 
   ngOnInit() {
     // this.loadUser();
@@ -55,6 +66,10 @@ export class MemberDetailComponent implements OnInit {
       });
     }
     return imageUrls;
+  }
+
+  selectTab(tabid: number) {
+    this.memberTabs.tabs[tabid].active = true;
   }
 
   // loadUser() {
